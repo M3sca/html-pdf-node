@@ -9,7 +9,7 @@ async function generatePdf(file, options, callback) {
     '--no-sandbox',
     '--disable-setuid-sandbox',
   ];
-  if(options.args) {
+  if (options.args) {
     args = options.args;
     delete options.args;
   }
@@ -19,8 +19,8 @@ async function generatePdf(file, options, callback) {
   });
   const page = await browser.newPage();
 
-  if(file.content) {
-    data = await inlineCss(file.content, {url:"/"});
+  if (file.content) {
+    data = await inlineCss(file.content, { url: "/" });
     console.log("Compiling the template with handlebars")
     // we have compile our code with handlebars
     const template = hb.compile(data, { strict: true });
@@ -33,15 +33,15 @@ async function generatePdf(file, options, callback) {
     });
   } else {
     await page.goto(file.url, {
-      waitUntil:[ 'load', 'networkidle0'], // wait for page to load completely
+      waitUntil: ['load', 'networkidle0'], // wait for page to load completely
     });
   }
 
   return Promise.props(page.pdf(options))
-    .then(async function(data) {
-       await browser.close();
+    .then(async function (data) {
+      await browser.close();
 
-       return Buffer.from(Object.values(data));
+      return Buffer.from(Object.values(data));
     }).asCallback(callback);
 }
 
@@ -51,7 +51,7 @@ async function generatePdfs(files, options, callback) {
     '--no-sandbox',
     '--disable-setuid-sandbox',
   ];
-  if(options.args) {
+  if (options.args) {
     args = options.args;
     delete options.args;
   }
@@ -60,9 +60,9 @@ async function generatePdfs(files, options, callback) {
   });
   let pdfs = [];
   const page = await browser.newPage();
-  for(let file of files) {
-    if(file.content) {
-      data = await inlineCss(file.content, {url:"/"})
+  for (let file of files) {
+    if (file.content) {
+      data = await inlineCss(file.content, { url: "/" })
       console.log("Compiling the template with handlebars")
       // we have compile our code with handlebars
       const template = hb.compile(data, { strict: true });
@@ -84,9 +84,9 @@ async function generatePdfs(files, options, callback) {
   }
 
   return Promise.resolve(pdfs)
-    .then(async function(data) {
-       await browser.close();
-       return data;
+    .then(async function (data) {
+      await browser.close();
+      return data;
     }).asCallback(callback);
 }
 
